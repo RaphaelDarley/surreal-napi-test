@@ -1,0 +1,11 @@
+{
+  "package": "surrealdb.node",
+  "devDependencies": {
+    "@napi-rs/cli": "^1.0.0"
+  },
+  "scripts": {
+    "build": "napi build --release",
+    "build:debug": "napi build",
+    "test": "napi build && node test.js"
+  }
+}
