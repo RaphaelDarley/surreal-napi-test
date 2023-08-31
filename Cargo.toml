@@ -19,3 +19,6 @@ surrealdb = { git = "https://github.com/surrealdb/surrealdb.git", features = [
 
 [build-dependencies]
 napi-build = "2.0.1"
+
+[profile.release]
+lto = true
