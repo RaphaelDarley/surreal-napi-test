@@ -1,13 +1,18 @@
 const { Surreal } = require("./index.node");
 
 async function run() {
-    let db = new Surreal();
+    const db = new Surreal();
+    await db.connect("memory");
 
-    console.log(db);
+    await db.use({ ns: 'test', db: 'test' });
 
-    db.connect("memory");
-    console.log(db);
-    db.connect("memory");
+    let create1 = await db.create("foo", { "test": "foo" });
+    console.log(create1);
+
+    // let query1 = await db.query("CREATE foo:db1;");
+    // console.log(query1);
+
+    // await db.query("CREATE |foo:100| RETURN NONE");
 
 }
 

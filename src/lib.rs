@@ -10,14 +10,14 @@ use opt::{auth::Credentials, endpoint::Options};
 use serde_json::to_value;
 use serde_json::{from_value, Value};
 use std::collections::VecDeque;
-use surrealdb::engine::any::Any;
+use surrealdb::engine::any::{connect, Any};
 use surrealdb::opt::auth::Database;
 use surrealdb::opt::auth::Namespace;
 use surrealdb::opt::auth::Root;
 use surrealdb::opt::auth::Scope;
 use surrealdb::opt::PatchOp;
 use surrealdb::opt::Resource;
-use surrealdb::sql::Range;
+use surrealdb::sql::{self, Range};
 
 #[napi]
 pub struct Surreal {
@@ -173,26 +173,24 @@ impl Surreal {
     }
 
     #[napi]
-    pub async fn query(&self, sql: String, bindings: Value) -> Result<Value> {
-        let mut response = match bindings.is_null() {
-            true => self.db.query(sql).await.map_err(err_map)?,
-            false => self.db.query(sql).bind(bindings).await.map_err(err_map)?,
+    pub async fn query(&self, sql: String, bindings: Option<Value>) -> Result<Value> {
+        let mut response = match bindings {
+            None => self.db.query(sql).await.map_err(err_map)?,
+            Some(b) => self.db.query(sql).bind(b).await.map_err(err_map)?,
         };
 
         let num_statements = response.num_statements();
 
-        let response = if num_statements > 1 {
-            let mut output = Vec::<Value>::with_capacity(num_statements);
+        let response: sql::Value = if num_statements > 1 {
+            let mut output = Vec::<sql::Value>::with_capacity(num_statements);
             for index in 0..num_statements {
-                let optn: Option<Value> = response.take(index).map_err(err_map)?;
-                output.push(optn.unwrap()); // this should always be some
+                output.push(response.take(index).map_err(err_map)?);
             }
-            Value::from(output)
+            sql::Value::from(output)
         } else {
-            let optn: Option<Value> = response.take(0).map_err(err_map)?;
-            optn.unwrap()
+            response.take(0).map_err(err_map)?
         };
-        Ok(response)
+        Ok(to_value(&response.into_json())?)
     }
 
     #[napi]
@@ -226,9 +224,10 @@ impl Surreal {
                 .map_err(err_map)?,
             None => self.db.create(resource).await.map_err(err_map)?,
         };
-        Ok(to_value(&response)?)
+        Ok(to_value(&response.into_json())?)
     }
 
+    #[napi]
     pub async fn update(&self, resource: String, data: Value) -> Result<Value> {
         let update = match resource.parse::<Range>() {
             Ok(range) => self
@@ -244,6 +243,7 @@ impl Surreal {
         Ok(to_value(&response.into_json())?)
     }
 
+    #[napi]
     pub async fn merge(&self, resource: String, data: Value) -> Result<Value> {
         let update = match resource.parse::<Range>() {
             Ok(range) => self
@@ -257,6 +257,7 @@ impl Surreal {
         Ok(to_value(&response.into_json())?)
     }
 
+    #[napi]
     pub async fn patch(&self, resource: String, data: Value) -> Result<Value> {
         // Prepare the update request
         let update = match resource.parse::<Range>() {
@@ -294,6 +295,7 @@ impl Surreal {
         Ok(to_value(&response.into_json())?)
     }
 
+    #[napi]
     pub async fn delete(&self, resource: String) -> Result<Value> {
         let response = match resource.parse::<Range>() {
             Ok(range) => self
@@ -308,14 +310,16 @@ impl Surreal {
                 .await
                 .map_err(err_map)?,
         };
-        Ok(to_value(&response)?)
+        Ok(to_value(&response.into_json())?)
     }
 
+    #[napi]
     pub async fn version(&self) -> Result<Value> {
         let response = self.db.version().await.map_err(err_map)?;
         Ok(to_value(&response)?)
     }
 
+    #[napi]
     pub async fn health(&self) -> Result<()> {
         self.db.health().await.map_err(err_map)?;
         Ok(())

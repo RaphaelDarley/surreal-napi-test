@@ -13,7 +13,13 @@ export class Surreal {
   signin(credentials: any): Promise<any>
   invalidate(): Promise<void>
   authenticate(token: string): Promise<void>
-  query(sql: string, bindings: any): Promise<any>
+  query(sql: string, bindings?: any | undefined | null): Promise<any>
   select(resource: string): Promise<any>
   create(resource: string, data: any): Promise<any>
+  update(resource: string, data: any): Promise<any>
+  merge(resource: string, data: any): Promise<any>
+  patch(resource: string, data: any): Promise<any>
+  delete(resource: string): Promise<any>
+  version(): Promise<any>
+  health(): Promise<void>
 }
