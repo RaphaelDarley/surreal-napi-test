@@ -10,7 +10,7 @@ use opt::{auth::Credentials, endpoint::Options};
 use serde_json::to_value;
 use serde_json::{from_value, Value};
 use std::collections::VecDeque;
-use surrealdb::engine::any::{connect, Any};
+use surrealdb::engine::any::Any;
 use surrealdb::opt::auth::Database;
 use surrealdb::opt::auth::Namespace;
 use surrealdb::opt::auth::Root;
@@ -212,16 +212,11 @@ impl Surreal {
     }
 
     #[napi]
-    pub async fn create(&self, resource: String, data: Value) -> Result<Value> {
+    pub async fn create(&self, resource: String, data: Option<Value>) -> Result<Value> {
         let resource = Resource::from(resource);
 
-        let response = match from_value::<Option<Value>>(data)? {
-            Some(data) => self
-                .db
-                .create(resource)
-                .content(data)
-                .await
-                .map_err(err_map)?,
+        let response = match data {
+            Some(d) => self.db.create(resource).content(d).await.map_err(err_map)?,
             None => self.db.create(resource).await.map_err(err_map)?,
         };
         Ok(to_value(&response.into_json())?)
