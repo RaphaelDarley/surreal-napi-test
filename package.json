@@ -41,5 +41,21 @@
     "universal": "napi universal",
     "version": "napi version"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.3",
+  "optionalDependencies": {
+    "surreal.node-win32-x64-msvc": "0.0.0",
+    "surreal.node-darwin-x64": "0.0.0",
+    "surreal.node-linux-x64-gnu": "0.0.0",
+    "surreal.node-darwin-arm64": "0.0.0",
+    "surreal.node-android-arm64": "0.0.0",
+    "surreal.node-linux-arm64-gnu": "0.0.0",
+    "surreal.node-linux-arm64-musl": "0.0.0",
+    "surreal.node-win32-arm64-msvc": "0.0.0",
+    "surreal.node-linux-arm-gnueabihf": "0.0.0",
+    "surreal.node-linux-x64-musl": "0.0.0",
+    "surreal.node-freebsd-x64": "0.0.0",
+    "surreal.node-win32-ia32-msvc": "0.0.0",
+    "surreal.node-android-arm-eabi": "0.0.0",
+    "surreal.node-darwin-universal": "0.0.0"
+  }
 }
