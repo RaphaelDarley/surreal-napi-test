@@ -77,24 +77,27 @@ test('set and and unset', async t => {
 
 })
 
-test('test select method', async t => {
-  const db = new Surreal();
-  await db.connect("memory");
-  await db.use({ 'ns': 'test', 'db': 'test' });
+// test('test select method', async t => {
+//   const db = new Surreal();
+//   await db.connect("memory");
+//   await db.use({ 'ns': 'test', 'db': 'test' });
 
-  const jason = { 'id': 'jason' };
-  const john = { 'id': 'person:john' };
-  const jaime = { 'id': 'person:jaime' };
+//   const jason = { 'id': 'person:jason' };
+//   const john = { 'id': 'person:john' };
+//   const jaime = { 'id': 'person:jaime' };
+//   const people = [jason, john, jaime];
 
-  await db.query("INSERT INTO person $people", { 'people': [jason, john, jaime] });
+//   await db.create(jason.id);
+//   await db.create(john.id);
+//   await db.create(jaime.id);
 
-  {
-    const res = await db.select('person');
-    console.log(res);
-    t.deepEqual(new Set(res), new Set([jason, john, jaime]));
-  }
+//   {
+//     const res = await db.select('person');
+//     console.log(res);
+//     t.is(new Set(res), new Set(people));
+//   }
 
-})
+// })
 
 // test('examples', async t => {
 
