@@ -12,25 +12,13 @@ napi = { version = "2", features = ["async", "serde-json"] }
 napi-derive = "2"
 serde = "1.0.188"
 serde_json = "1.0.105"
-surrealdb = { git = "https://github.com/surrealdb/surrealdb.git", features = [
-    "kv-mem",
-    # "kv-rocksdb",
-] }
-
-[target.'cfg(target_arch = "x86_64", target_os = "windows", target_env = "msvc")'.dependencies]
-surrealdb = { features = ["kv-mem", "kv-rocksdb"] }
-
-[target.'cfg(target_arch = "x86_64", target_os = "linux", target_env = "gnu")'.dependencies]
-surrealdb = { features = ["kv-mem", "kv-rocksdb"] }
-
-[target.'cfg(target_arch = "aarch64", target_os = "android")'.dependencies]
-surrealdb = { features = ["kv-mem", "kv-rocksdb"] }
-
-[target.'cfg(target_arch = "arm", target_os = "android")'.dependencies]
-surrealdb = { features = ["kv-mem", "kv-rocksdb"] }
+surrealdb = { version = "1.0.0-beta.10", features = ["kv-mem"] }
 
 [build-dependencies]
 napi-build = "2.0.1"
+
+[features]
+rocksdb = ["surrealdb/kv-rocksdb"]
 
 [profile.release]
 lto = true
