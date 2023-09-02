@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: [self-hosted, macOS]
+          - host: Epimetheus
             target: x86_64-apple-darwin
             build: |
               yarn build
@@ -50,7 +50,7 @@ jobs:
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: set -e && yarn build && strip *.node
-          - host: [self-hosted, macOS]
+          - host: Epimetheus
             target: aarch64-apple-darwin
             build: |
               yarn build --target aarch64-apple-darwin
@@ -158,7 +158,7 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
   build-freebsd:
-    runs-on: [self-hosted, macOS]
+    runs-on: Epimetheus
     name: Build FreeBSD
     steps:
       - uses: actions/checkout@v3
@@ -213,7 +213,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: [self-hosted, macOS]
+          - host: Epimetheus
             target: x86_64-apple-darwin
           - host: windows-latest
             target: x86_64-pc-windows-msvc
@@ -426,7 +426,7 @@ jobs:
     name: Build universal macOS binary
     needs:
       - build
-    runs-on: [self-hosted, macOS]
+    runs-on: Epimetheus
     steps:
       - uses: actions/checkout@v3
       - name: Setup node
