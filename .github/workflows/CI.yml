@@ -250,8 +250,8 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - '14'
-          - '16'
+          # - '14'
+          # - '16'
           - '18'
     runs-on: ubuntu-latest
     steps:
