@@ -38,7 +38,7 @@
     "node": ">= 10"
   },
   "scripts": {
-    "artifacts": "napi artifacts",
+    "artifacts": "node move_artifacts.js",
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "prepublishOnly": "napi prepublish -t npm",
